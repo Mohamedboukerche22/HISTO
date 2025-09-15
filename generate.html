@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منشئ ملف JSON للبطاقات التعليمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e54c8;
+            --secondary-color: #8f94fb;
+            --accent-color: #ff6b6b;
+            --text-color: #333;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --card-bg: #ffffff;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #fdfbfb, #ebedee);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: var(--shadow);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to right, #6c757d, #868e96);
+        }
+
+        .cards-preview {
+            margin-top: 40px;
+            border-top: 2px solid #eee;
+            padding-top: 30px;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card-item {
+            background: var(--light-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .card-type {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .card-content {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .card-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .json-output {
+            margin-top: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px dashed #ccc;
+        }
+
+        .json-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: var(--success-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>منشئ ملف JSON للبطاقات التعليمية</h1>
+            <p class="description">أدخل معلومات البطاقات التعليمية لتوليد ملف JSON يمكنك استخدامه في موقع البطاقات</p>
+        </header>
+
+        <form id="card-form">
+            <div class="form-group">
+                <label for="card-type">نوع البطاقة</label>
+                <select id="card-type" required>
+                    <option value="personality">شخصية</option>
+                    <option value="event">حدث تاريخي</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="card-title">العنوان</label>
+                <input type="text" id="card-title" placeholder="أدخل عنوان البطاقة" required>
+            </div>
+
+            <div class="form-group">
+                <label for="card-content">المحتوى الرئيسي</label>
+                <textarea id="card-content" placeholder="أدخل المحتوى الرئيسي للبطاقة (سيظهر على وجه البطاقة)" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="card-details">التفاصيل</label>
+                <textarea id="card-details" placeholder="أدخل التفاصيل الكاملة (ستظهر على ظهر البطاقة)" required></textarea>
+            </div>
+
+            <button type="submit" class="btn">إضافة البطاقة</button>
+        </form>
+
+        <div class="cards-preview">
+            <h2 class="preview-title">البطاقات المضافة</h2>
+            <div id="cards-list">
+            </div>
+        </div>
+
+        <div class="json-output">
+            <h2 class="json-title">محتوى ملف JSON</h2>
+            <pre id="json-content">[]</pre>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn" id="download-btn">تحميل ملف JSON</button>
+            <button class="btn btn-secondary" id="reset-btn">بدء من جديد</button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">تم نسخ JSON إلى الحافظة</div>
+
+    <script>
+        let cards = [];
+
+        const cardForm = document.getElementById('card-form');
+        const cardsList = document.getElementById('cards-list');
+        const jsonContent = document.getElementById('json-content');
+        const downloadBtn = document.getElementById('download-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const notification = document.getElementById('notification');
+
+        cardForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('card-type').value;
+            const title = document.getElementById('card-title').value;
+            const content = document.getElementById('card-content').value;
+            const details = document.getElementById('card-details').value;
+            
+            const newCard = {
+                type,
+                title,
+                content,
+                details
+            };
+            
+            cards.push(newCard);
+            updateCardsList();
+            updateJsonOutput();
+            cardForm.reset();
+        });
+
+        // تحديث قائمة البطاقات المعروضة
+        function updateCardsList() {
+            cardsList.innerHTML = '';
+            
+            if (cards.length === 0) {
+                cardsList.innerHTML = '<p style="text-align: center; color: #666;">لم تتم إضافة أي بطاقات بعد</p>';
+                return;
+            }
+            
+            cards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card-item';
+                cardElement.innerHTML = `
+                    <div class="card-header">
+                        <span class="card-title">${card.title}</span>
+                        <span class="card-type">${card.type === 'personality' ? 'شخصية' : 'حدث تاريخي'}</span>
+                    </div>
+                    <div class="card-content">${card.content}</div>
+                    <div class="card-actions">
+                        <button class="card-btn" onclick="editCard(${index})">تعديل</button>
+                        <button class="card-btn" onclick="deleteCard(${index})">حذف</button>
+                    </div>
+                `;
+                
+                cardsList.appendChild(cardElement);
+            });
+        }
+
+        function updateJsonOutput() {
+            jsonContent.textContent = JSON.stringify(cards, null, 2);
+
+            jsonContent.style.cursor = 'pointer';
+            jsonContent.title = 'انقر للنسخ إلى الحافظة';
+            jsonContent.onclick = copyJsonToClipboard;
+        }
+
+        function copyJsonToClipboard() {
+            navigator.clipboard.writeText(JSON.stringify(cards, null, 2))
+                .then(() => {
+                    showNotification();
+                });
+        }
+
+        function showNotification() {
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        downloadBtn.addEventListener('click', function() {
+            if (cards.length === 0) {
+                alert('لم تقم بإضافة أي بطاقات بعد');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(cards, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'cards.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        });
+
+        resetBtn.addEventListener('click', function() {
+            if (confirm('هل أنت متأكد أنك تريد حذف جميع البطاقات والبدء من جديد؟')) {
+                cards = [];
+                updateCardsList();
+                updateJsonOutput();
+            }
+        });
+
+
+        window.deleteCard = function(index) {
+            if (confirm('هل أنت متأكد أنك تريد حذف هذه البطاقة؟')) {
+                cards.splice(index, 1);
+                updateCardsList();
+                updateJsonOutput();
+            }
+        };
+
+        window.editCard = function(index) {
+            const card = cards[index];
+            
+            document.getElementById('card-type').value = card.type;
+            document.getElementById('card-title').value = card.title;
+            document.getElementById('card-content').value = card.content;
+            document.getElementById('card-details').value = card.details;
+
+            cards.splice(index, 1);
+            updateCardsList();
+            updateJsonOutput();
+ 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        updateCardsList();
+    </script>
+</body>
+</html>
