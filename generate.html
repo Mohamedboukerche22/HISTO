@@ -260,6 +260,7 @@
                 <select id="card-type" required>
                     <option value="personality">شخصية</option>
                     <option value="event">حدث تاريخي</option>
+                    <option value="term"> مصطلح</option>
                 </select>
             </div>
 
@@ -331,7 +332,6 @@
             cardForm.reset();
         });
 
-        // تحديث قائمة البطاقات المعروضة
         function updateCardsList() {
             cardsList.innerHTML = '';
             
