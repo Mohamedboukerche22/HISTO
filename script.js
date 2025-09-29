@@ -40,8 +40,14 @@
               "title": "الرأسمالية",
               "content": "USA SYSTEM",
                "details": "نظام إقتصادي يقوم على الملكية الفردية لوسائل الإنتاج ظهر سنة 1750 ببريطانيا إتبعه المعسكر الغربي بقيادة و-م-أ ضد المعسكر الإشتراكي في الحرب العالمية"
-         }
-         ];
+         },
+         {
+              "type": "term",
+              "title": "الثنائية القطبية ",
+              "content": "نظام دولي جديد",
+              "details": "نظام دولي جديد ساد بعد ح .ع.2 سنة 1945 وإلى غاية 1989 تحكمت فيه و.م.أ الرأسمالية والإتحاد السوفياتي الإشتراكي أيام الحرب الباردة"
+        }
+        ];
 
         const cardsContainer = document.getElementById('cards-container');
         const filterButtons = document.querySelectorAll('.filter-btn');
